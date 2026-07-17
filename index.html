@@ -293,7 +293,7 @@ const C = {
   badBg: "#FBE9E9"
 };
 const FONT = "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
-const APP_VERSION = "30/05/2026 · v19 (HTML+Supabase)";
+const APP_VERSION = "30/05/2026 · v20 (HTML+Supabase)";
 const PADRON = {
   "19762": {
     "nombre": "RICCIARDI FAVIO GUSTAVO",
@@ -9257,6 +9257,14 @@ const kMembers = key => `aca:socios:${key}`;
 const slug = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
 const ALL_ESTABS = Object.fromEntries(Object.entries(ESTAB_MAP).map(([sheet, nombre]) => [slug(sheet), nombre]));
 const norm = v => v == null ? "" : String(v).trim();
+const MESES_MAP = { enero: 1, febrero: 2, marzo: 3, abril: 4, mayo: 5, junio: 6, julio: 7, agosto: 8, septiembre: 9, setiembre: 9, octubre: 10, noviembre: 11, diciembre: 12 };
+const mesNum = v => {
+  if (v == null) return NaN;
+  const n = parseInt(v, 10);
+  if (n >= 1 && n <= 12) return n;
+  const s = String(v).trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return MESES_MAP[s] || NaN;
+};
 const findCol = (headers, ...names) => {
   const H = headers.map(h => norm(h).toLowerCase());
   for (const n of names) {
@@ -9662,7 +9670,7 @@ function ImportPanel({
           const nombre = norm(r[cNom]);
           if (!nombre || nombre.toLowerCase() === "false") continue;
           const anio = parseInt(r[cAnio], 10);
-          const mes = parseInt(r[cMes], 10);
+          const mes = mesNum(r[cMes]);
           if (!anio || !mes) continue;
           nuevos.push({
             orden: norm(r[cOrden]) || String(i),
